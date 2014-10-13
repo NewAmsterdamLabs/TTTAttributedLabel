@@ -1397,7 +1397,9 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
           withEvent:(UIEvent *)event
 {
     if (![self linkAtPoint:point] || !self.userInteractionEnabled || self.hidden || self.alpha < 0.01) {
-        return [super hitTest:point withEvent:event];
+        UIView *hitView = [super hitTest:point withEvent:event];
+        if (hitView == self) return nil;
+        return hitView;
     }
 
     return self;
