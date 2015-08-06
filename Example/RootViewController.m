@@ -56,16 +56,18 @@
     return (NSInteger)[self.espressos count];
 }
 
-- (CGFloat)tableView:(__unused UITableView *)tableView
+- (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(__unused NSIndexPath *)indexPath
 {
-    return [AttributedTableViewCell heightForCellWithText:[self.espressos objectAtIndex:(NSUInteger)indexPath.row]];
+    return [AttributedTableViewCell heightForCellWithText:[self.espressos objectAtIndex:(NSUInteger)indexPath.row]
+                                           availableWidth:CGRectGetWidth(tableView.frame)];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
     
     AttributedTableViewCell *cell = (AttributedTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
     if (cell == nil) {
         cell = [[AttributedTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -95,6 +97,14 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)attributedLabel:(__unused TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url {
     [[[UIActionSheet alloc] initWithTitle:[url absoluteString] delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Open Link in Safari", nil), nil] showInView:self.view];
+}
+
+- (void)attributedLabel:(__unused TTTAttributedLabel *)label didLongPressLinkWithURL:(__unused NSURL *)url atPoint:(__unused CGPoint)point {
+    [[[UIAlertView alloc] initWithTitle:@"URL Long Pressed"
+                                message:@"You long-pressed a URL. Well done!"
+                               delegate:nil
+                      cancelButtonTitle:@"Woohoo!"
+                      otherButtonTitles:nil] show];
 }
 
 #pragma mark - UIActionSheetDelegate
